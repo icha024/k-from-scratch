@@ -1,0 +1,21 @@
+---
+
+- hosts: etcd
+
+  gather_facts: False
+  pre_tasks:
+  - name: Install Python
+    raw: apt -y update && apt install -y python-minimal
+  - setup: # Gather facts
+
+  tasks:
+  - name: Install etcd  
+    apt:
+      name: etcd
+      update_cache: yes
+
+  - name: Ensure etcd is running
+    systemd:
+      name: etcd
+      enabled: True
+      state: started
