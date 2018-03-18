@@ -1,21 +1,16 @@
 ---
 
-- hosts: etcd
+- name: Install Python
+  hosts: all
+  roles:
+   - pre-ansible
 
-  gather_facts: False
-  pre_tasks:
-  - name: Install Python
-    raw: apt -y update && apt install -y python-minimal
-  - setup: # Gather facts
+- name: Setup etcd
+  hosts: etcd
+  roles:
+   - etcd
 
-  tasks:
-  - name: Install etcd  
-    apt:
-      name: etcd
-      update_cache: yes
-
-  - name: Ensure etcd is running
-    systemd:
-      name: etcd
-      enabled: True
-      state: started
+- name: Setup Master
+  hosts: kube-master
+  roles:
+   - kube-master

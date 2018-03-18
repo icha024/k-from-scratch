@@ -1,0 +1,27 @@
+---
+# tasks file for kube-master
+# - name: Remove existing download
+#   file:
+#     path: /downloads/kubernetes.tar.gz
+#     state: absent
+- name: Creates directory
+  file:
+    path: /downloads
+    state: directory
+    mode: 0775
+
+# - name: Download Kubes
+#   get_url: 
+#     url: https://github.com/kubernetes/kubernetes/releases/download/v1.9.4/kubernetes.tar.gz
+#     dest: /downloads/kubernetes.tar.gz
+# - name: Extract Kubes
+#   unarchive: 
+#     src: /downloads/kubernetes.tar.gz
+#     dest: /downloads/kubernetes
+
+- name: Download and Extract Kubes
+  unarchive: 
+    src: https://github.com/kubernetes/kubernetes/releases/download/v1.9.4/kubernetes.tar.gz
+    dest: /downloads/
+    remote_src: yes
+

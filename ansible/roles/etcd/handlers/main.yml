@@ -1,0 +1,6 @@
+---
+# handlers file for etcd
+- name: Install etcd  
+  apt:
+    name: etcd
+    update_cache: yes

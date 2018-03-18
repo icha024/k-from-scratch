@@ -3,3 +3,4 @@
 **/*.tfstate.backup
 **/.terraform/
 **/access_key*
+**/*.retry
