@@ -4,10 +4,14 @@ provider "aws" {
   region     = "eu-west-2"
 }
 
-resource "aws_instance" "ian-box" {
+resource "aws_instance" "kubes-box" {
   ami           = "ami-941e04f0"
   instance_type = "t2.micro"
   key_name      = "${var.key_name}"
+  count         = "1"
+
+  # user_data     = "${file("startup-user-data")}"
+  user_data = "${base64encode(file("${path.module}/startup-user-data"))}"
 
   # vpc_security_group_ids = ["sg-07939d6f"]
   vpc_security_group_ids = "${var.security_group_ids}"
@@ -18,7 +22,7 @@ resource "aws_instance" "ian-box" {
   }
 
   tags {
-    Name = "ian-box-main"
+    Name = "kubes-box-${count.index}"
   }
 }
 
@@ -27,10 +31,12 @@ resource "aws_instance" "ian-box" {
 #   size              = 10
 # }
 
-
 # resource "aws_volume_attachment" "ebs_att" {
 #   device_name = "/dev/sdh"
 #   volume_id   = "${aws_ebs_volume.ian-storage.id}"
 #   instance_id = "${aws_instance.ian-box.id}"
 # }
 
+output "ip" {
+  value = "${aws_instance.kubes-box.public_ip}"
+}
