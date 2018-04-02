@@ -4,16 +4,29 @@ provider "aws" {
   region     = "eu-west-2"
 }
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
 resource "aws_instance" "kubes-box" {
-  ami           = "ami-941e04f0"
+  # ami           = "ami-941e04f0"
+  ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"
   key_name      = "${var.key_name}"
   count         = "1"
 
-  # user_data     = "${file("startup-user-data")}"
-  user_data = "${base64encode(file("${path.module}/startup-user-data"))}"
-
-  # vpc_security_group_ids = ["sg-07939d6f"]
   vpc_security_group_ids = "${var.security_group_ids}"
 
   root_block_device = {
