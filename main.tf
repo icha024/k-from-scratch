@@ -25,7 +25,7 @@ resource "aws_instance" "kubes-box" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.micro"
   key_name      = "${var.key_name}"
-  count         = "1"
+  count         = "2"
 
   vpc_security_group_ids = "${var.security_group_ids}"
 
@@ -51,5 +51,5 @@ resource "aws_instance" "kubes-box" {
 # }
 
 output "ip" {
-  value = "${aws_instance.kubes-box.public_ip}"
+  value = ["${aws_instance.kubes-box.*.public_ip}"]
 }

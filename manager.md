@@ -101,11 +101,11 @@ ExecStart=/usr/local/bin/kube-apiserver \
   --audit-log-maxsize=100 \
   --audit-log-path=/var/log/audit.log \
   --authorization-mode=Node,RBAC \
-  --bind-address=0.0.0.0 \
+  --bind-address=172.31.12.29 \
   --enable-swagger-ui=true \
   --etcd-servers=http://172.31.12.29:2379 \
   --event-ttl=1h \
-  --insecure-bind-address=127.0.0.1 \
+  --insecure-bind-address=172.31.12.29 \
   --kubelet-https=false \
   --runtime-config=api/all \
   --service-cluster-ip-range=172.31.0.0/16 \
@@ -118,7 +118,7 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
-cat > kube-controller-manager.service <<EOF
+# cat > kube-controller-manager.service <<EOF
 # [Unit]
 # Description=Kubernetes Controller Manager
 # Documentation=https://github.com/kubernetes/kubernetes
@@ -141,6 +141,8 @@ cat > kube-controller-manager.service <<EOF
 
 # [Install]
 # WantedBy=multi-user.target
+
+cat > kube-controller-manager.service <<EOF
 [Unit]
 Description=Kubernetes Controller Manager
 Documentation=https://github.com/kubernetes/kubernetes
@@ -151,7 +153,7 @@ ExecStart=/usr/local/bin/kube-controller-manager \
   --cluster-cidr=172.31.0.0/16 \
   --cluster-name=kubernetes \
   --leader-elect=true \
-  --master=http://127.0.0.1:8080 \
+  --master=http://172.31.12.29:8080 \
   --service-cluster-ip-range=172.31.0.0/16 \
   --v=2
 Restart=on-failure
@@ -169,7 +171,7 @@ Documentation=https://github.com/kubernetes/kubernetes
 [Service]
 ExecStart=/usr/local/bin/kube-scheduler \\
   --leader-elect=true \\
-  --master=http://127.0.0.1:8080 \\
+  --master=http://172.31.12.29:8080 \\
   --v=2
 Restart=on-failure
 RestartSec=5
